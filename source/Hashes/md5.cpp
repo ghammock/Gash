@@ -296,7 +296,7 @@ string MD5::calculateHash (ifstream &file)
         blockData = 0;
 
         // We need to concatenate the message contents into 512-bit block.
-        for (uint32 j = 0; (j < 16) && !endOfStream; ++j)
+        for (uint32 j = 0; j < 16; ++j)
         {
             // Initialize the data to be appended.
             append = 0x00000000;

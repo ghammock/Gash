@@ -4,7 +4,7 @@
 ||                                                                           ||
 ||    Author: Gary Hammock, PE                                               ||
 ||    Creation Date: 2008-09-17                                              ||
-||    Last Edit Date: 2014-02-27                                             ||
+||    Last Edit Date: 2014-02-28                                             ||
 ||                                                                           ||
 ||===========================================================================||
 ||  DESCRIPTION                                                              ||
@@ -40,7 +40,7 @@
 
 /** @file gash.h
  *  @author Gary Hammock, PE
- *  @date 2014-02-27
+ *  @date 2014-02-28
 */
 
 #ifndef _GASH_DEF_H
@@ -53,6 +53,8 @@
 
 #include "Hashes\md5.h"
 #include "Hashes\sha256.h"
+#include "Hashes\crc32.h"
+#include "Hashes\elf.h"
 
 using std::string;
 using std::ifstream;
@@ -61,7 +63,7 @@ using std::cout;
 using std::cerr;
 using std::endl;
 
-#define _VERSION_ "0.0.1"
+#define _VERSION_ "0.0.2"
 
 ///////////////////////////////////////
 //    Function Declarations

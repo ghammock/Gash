@@ -4,7 +4,7 @@
 ||                                                                           ||
 ||    Author: Gary Hammock, PE                                               ||
 ||    Creation Date: 2008-09-17                                              ||
-||    Last Edit Date: 2014-02-27                                             ||
+||    Last Edit Date: 2014-02-28                                             ||
 ||                                                                           ||
 ||===========================================================================||
 ||  DESCRIPTION                                                              ||
@@ -40,7 +40,7 @@
 
 /** @file gash.cpp
  *  @author Gary Hammock, PE
- *  @date 2014-02-27
+ *  @date 2014-02-28
 */
 
 #include "gash.h"
@@ -83,6 +83,10 @@ int main (int argc, char *argv[])
             cout << "SHA-256: " << SHA256(file);
         else if (arg.str() == "-md5")
             cout << "MD5: " << MD5(file);
+        else if (arg.str() == "-crc")
+            cout << "CRC: " << CRC32(file);
+        else if (arg.str() == "-elf")
+            cout << "ELF: " << ELF(file);
         else
             displayHelp();
     }
