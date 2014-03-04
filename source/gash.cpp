@@ -53,18 +53,37 @@ int main (int argc, char *argv[])
 
     cout << "Gash version: " << _VERSION_ << endl;
 
-    // If too few arguments were given, display the usage information.
-    if (argc < 2)
+    // If too few or too many arguments were given,
+    // display the usage information.
+    if ((argc < 2) || (argc > 3))
     {
         displayHelp();
+
+        // Tidy up the console.
+        cout << endl << endl;
+
+        return 0;
+    }
+
+    // Handle the non-file flags.
+    arg << argv[1];
+    if (argc == 2)
+    {
+        if (arg.str() == "-c")
+            dispCredits();
+        else if (arg.str() == "-h")
+            displayHelp();
+
+        // Tidy up the console.
+        cout << endl << endl;
+
         return 0;
     }
 
     // Check to make sure that we can access the file specified by the caller.
     if (!getFileHandle(filename, file))
     {
-        cerr << "Error: could not open file \"" << filename << "\"."
-             << endl << endl;
+        cerr << "Error: could not open file \"" << filename << "\".";
 
         return 1;
     }
@@ -77,8 +96,6 @@ int main (int argc, char *argv[])
         cout << "MD5: " << MD5(file);
     else
     {
-        arg << argv[1];
-
         if (arg.str() == "-sha256")
             cout << "SHA-256: " << SHA256(file);
         else if (arg.str() == "-md5")
@@ -87,6 +104,8 @@ int main (int argc, char *argv[])
             cout << "CRC: " << CRC32(file);
         else if (arg.str() == "-elf")
             cout << "ELF: " << ELF(file);
+        else if (arg.str() == "-adler32")
+            cout << "Adler32: " << Adler32(file);
         else
             displayHelp();
     }
@@ -117,9 +136,35 @@ void displayHelp (void)
          << "Where <hashType> can be any of:" << endl
          << "    -md5 : MD5" << endl
          << "    -sha256 : SHA-256" << endl
+         << "    -adler32 : Adler-32" << endl
+         << "    -crc : CRC" << endl
+         << "    -elf : ELF" << endl
          << "And <options> can include:" << endl
-         << "    -c : credits" << endl
-         << endl;
+         << "    -c : credits";
+
+    return;
+}
+
+void dispCredits (void)
+{
+    cout << "Gash.  A file hashing/integrity checker." << endl
+         << "(C) Gary Hammock, 2014."  << endl
+         << endl
+         << "THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,"
+         << endl
+         << "EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES"
+         << endl
+         << "OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND"
+         << endl
+         << "NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT"
+         << endl
+         << "HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,"
+         << endl
+         << "WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING"
+         << endl
+         << "FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR"
+         << endl
+         << "OTHER DEALINGS IN THE SOFTWARE.";
 
     return;
 }

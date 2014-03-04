@@ -4,7 +4,7 @@
 ||                                                                           ||
 ||    Author: Gary Hammock, PE                                               ||
 ||    Creation Date: 2008-09-17                                              ||
-||    Last Edit Date: 2014-02-28                                             ||
+||    Last Edit Date: 2014-03-03                                             ||
 ||                                                                           ||
 ||===========================================================================||
 ||  DESCRIPTION                                                              ||
@@ -40,7 +40,7 @@
 
 /** @file gash.h
  *  @author Gary Hammock, PE
- *  @date 2014-02-28
+ *  @date 2014-03-03
 */
 
 #ifndef _GASH_DEF_H
@@ -51,10 +51,11 @@
 #include <string>
 #include <sstream>
 
-#include "Hashes\md5.h"
-#include "Hashes\sha256.h"
+#include "Hashes\adler32.h"
 #include "Hashes\crc32.h"
 #include "Hashes\elf.h"
+#include "Hashes\md5.h"
+#include "Hashes\sha256.h"
 
 using std::string;
 using std::ifstream;
@@ -63,13 +64,13 @@ using std::cout;
 using std::cerr;
 using std::endl;
 
-#define _VERSION_ "0.0.2"
+#define _VERSION_ "0.0.3"
 
 ///////////////////////////////////////
 //    Function Declarations
 ////////////////////////
-
 bool getFileHandle (string filename, ifstream &file);
 void displayHelp (void);
+void dispCredits (void);
 
 #endif
