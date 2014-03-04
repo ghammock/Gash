@@ -33,6 +33,7 @@ Note: The flags are case sensitive!
     SHA-256          -sha256
     CRC-32           -crc32
     ELF              -elf
+    Adler-32         -adler32
 
 ================================================================================
                                  REFERENCES
@@ -55,3 +56,6 @@ Note: The flags are case sensitive!
 
 6.) Tool Interface Standards.  "Executable and Linking Format".  Portable
       Formats Specification, Version 1.1.
+
+7.) Wikipedia. Website.  "Adler-32".  http://en.wikipedia.org/wiki/Adler-32
+      Retrieved on: 2009-12-17.   
