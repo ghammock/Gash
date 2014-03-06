@@ -51,11 +51,11 @@
 #include <string>
 #include <sstream>
 
-#include "Hashes\adler32.h"
-#include "Hashes\crc32.h"
-#include "Hashes\elf.h"
-#include "Hashes\md5.h"
-#include "Hashes\sha256.h"
+#include "Hashes/adler32.h"
+#include "Hashes/crc32.h"
+#include "Hashes/elf.h"
+#include "Hashes/md5.h"
+#include "Hashes/sha256.h"
 
 using std::string;
 using std::ifstream;
@@ -63,6 +63,7 @@ using std::stringstream;
 using std::cout;
 using std::cerr;
 using std::endl;
+using std::ios;
 
 #define _VERSION_ "0.0.3"
 
