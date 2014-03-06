@@ -1,8 +1,6 @@
 NAME=gash
 DIR=$(shell pwd)
 
-export PATH := $(PATH):bin
-
 all: gash_binary gash_doc
 
 gash_binary:
@@ -19,3 +17,6 @@ gash_doc:
 
 dist:
 	tar -czvf $(NAME).tar.gz .
+
+clean:
+	/rm bin/gash
