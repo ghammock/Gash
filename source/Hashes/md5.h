@@ -4,7 +4,7 @@
 ||                                                                           ||
 ||    Author: Gary Hammock, PE                                               ||
 ||    Creation Date: 2008-09-17                                              ||
-||    Last Edit Date: 2014-02-27                                             ||
+||    Last Edit Date: 2014-03-13                                             ||
 ||                                                                           ||
 ||===========================================================================||
 ||  DESCRIPTION                                                              ||
@@ -56,7 +56,7 @@
 
 /** @file md5.h
  *  @author Gary Hammock, PE
- *  @date 2014-02-24
+ *  @date 2014-03-13
 */
 
 #ifndef _GH_MD5_DEF_H
@@ -101,7 +101,7 @@ class MD5 : public MessageHash
      *        hashed value of the input data.
      *  @param data The data that is to be hashed.
     */
-    MD5 (const vector < byte > &data);
+    MD5 (const vector < byte_t > &data);
 
     /** Initialize an MD5 object by hashing an input file stream.
      *
@@ -139,7 +139,7 @@ class MD5 : public MessageHash
      *  @param data The data that is to be hashed.
      *  @return The MD5 value as a std::string.
     */
-    string calculateHash (const vector < byte > &data);
+    string calculateHash (const vector < byte_t > &data);
 
     /** Calculate the MD5 value of a file.
      *
@@ -171,7 +171,7 @@ class MD5 : public MessageHash
      *  @param data The data that is to be hashed.
      *  @return A vector containing the padded data.
     */
-    vector < byte > _padVector (const vector < byte > &data) const;
+    vector < byte_t > _padVector (const vector < byte_t > &data) const;
 
     /** Pad the message contents to meet RFC1321.
      *
@@ -183,8 +183,8 @@ class MD5 : public MessageHash
      *  @param bitsInFile The size of the message in bits.
      *  @return none.
     */
-    void _padLastBlock (vector < uint32 > &lastBlock, uint32 dataInBlock,
-                        uint32 bitsInFile) const;
+    void _padLastBlock (vector < uint32_t > &lastBlock, uint32_t dataInBlock,
+                        uint64_t bitsInFile) const;
 
     /** Convert the hash from big endian to little endian format.
      *
@@ -201,7 +201,7 @@ class MD5 : public MessageHash
      *  @param b512 The 512-bit message block (16, 32-bit words).
      *  @return none.
     */
-    void _round1 (vector < uint32 > b512);
+    void _round1 (vector < uint32_t > b512);
 
     /** Avalanche effect, Round 2.
      *
@@ -210,7 +210,7 @@ class MD5 : public MessageHash
      *  @param b512 The 512-bit message block (16, 32-bit words).
      *  @return none.
     */
-    void _round2 (vector < uint32 > b512);
+    void _round2 (vector < uint32_t > b512);
 
     /** Avalanche effect, Round 3.
      *
@@ -219,7 +219,7 @@ class MD5 : public MessageHash
      *  @param b512 The 512-bit message block (16, 32-bit words).
      *  @return none.
     */
-    void _round3 (vector < uint32 > b512);
+    void _round3 (vector < uint32_t > b512);
 
     /** Avalanche effect, Round 4.
      *
@@ -228,7 +228,7 @@ class MD5 : public MessageHash
      *  @param b512 The 512-bit message block (16, 32-bit words).
      *  @return none.
     */
-    void _round4 (vector < uint32 > b512);
+    void _round4 (vector < uint32_t > b512);
 
     // These functions are used for the rounding (avalanche effect)
     // of the MD5 algorithm as specified by RFC 1321
@@ -247,8 +247,8 @@ class MD5 : public MessageHash
      *           t[i] = 2^32 * abs(sin(i)),  where i is in radians.
      *  @return none.
     */
-    void _FF (uint32 &a, uint32 b, uint32 c, uint32 d,
-              uint32 Mi, uint32 s, uint32 t);
+    void _FF (uint32_t &a, uint32_t b, uint32_t c, uint32_t d,
+              uint32_t Mi, uint32_t s, uint32_t t);
 
     /** The avalanche function used for Round 2 as specified by RFC 1321.
      *
@@ -264,8 +264,8 @@ class MD5 : public MessageHash
      *           t[i] = 2^32 * abs(sin(i)),  where i is in radians.
      *  @return none.
     */
-    void _GG (uint32 &a, uint32 b, uint32 c, uint32 d,
-              uint32 Mi, uint32 s, uint32 t);
+    void _GG (uint32_t &a, uint32_t b, uint32_t c, uint32_t d,
+              uint32_t Mi, uint32_t s, uint32_t t);
 
     /** The avalanche function used for Round 3 as specified by RFC 1321.
      *
@@ -281,8 +281,8 @@ class MD5 : public MessageHash
      *           t[i] = 2^32 * abs(sin(i)),  where i is in radians.
      *  @return none.
     */
-    void _HH (uint32 &a, uint32 b, uint32 c, uint32 d,
-              uint32 Mi, uint32 s, uint32 t);
+    void _HH (uint32_t &a, uint32_t b, uint32_t c, uint32_t d,
+              uint32_t Mi, uint32_t s, uint32_t t);
 
     /** The avalanche function used for Round 4 as specified by RFC 1321.
      *
@@ -298,8 +298,8 @@ class MD5 : public MessageHash
      *           t[i] = 2^32 * abs(sin(i)),  where i is in radians.
      *  @return none.
     */
-    void _II (uint32 &a, uint32 b, uint32 c, uint32 d,
-              uint32 Mi, uint32 s, uint32 t);
+    void _II (uint32_t &a, uint32_t b, uint32_t c, uint32_t d,
+              uint32_t Mi, uint32_t s, uint32_t t);
 
 };  // End class MD5.
 

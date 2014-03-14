@@ -4,7 +4,7 @@
 ||                                                                           ||
 ||    Author: Gary Hammock, PE                                               ||
 ||    Creation Date: 2009-12-18                                              ||
-||    Last Edit Date: 2014-02-28                                             ||
+||    Last Edit Date: 2014-03-13                                             ||
 ||                                                                           ||
 ||===========================================================================||
 ||  DESCRIPTION                                                              ||
@@ -52,7 +52,7 @@
 
 /** @file elf.h
  *  @author Gary Hammock, PE
- *  @date 2014-02-28
+ *  @date 2014-03-13
 */
 
 #ifndef _GH_ELF_CHECKSUM_DEF_H
@@ -98,7 +98,7 @@ class ELF : public MessageHash
      *        hashed value of the input data.
      *  @param data The data that is to be hashed.
     */
-    ELF (const vector < byte > &data);
+    ELF (const vector < byte_t > &data);
 
     /** Initialize an ELF object by hashing an input file stream.
      *
@@ -136,7 +136,7 @@ class ELF : public MessageHash
      *  @param data The data that is to be hashed.
      *  @return The ELF value as a std::string.
     */
-    string calculateHash (const vector < byte > &data);
+    string calculateHash (const vector < byte_t > &data);
 
     /** Calculate the ELF value of a file.
      *

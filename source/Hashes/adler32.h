@@ -4,7 +4,7 @@
 ||                                                                           ||
 ||    Author: Gary Hammock, PE                                               ||
 ||    Creation Date: 2009-12-17                                              ||
-||    Last Edit Date: 2014-02-28                                             ||
+||    Last Edit Date: 2014-03-13                                             ||
 ||                                                                           ||
 ||===========================================================================||
 ||  DESCRIPTION                                                              ||
@@ -52,7 +52,7 @@
 
 /** @file adler32.h
  *  @author Gary Hammock, PE
- *  @date 2014-02-28
+ *  @date 2014-03-13
 */
 
 #ifndef _GH_ADLER32_DEF_H
@@ -98,7 +98,7 @@ class Adler32 : public MessageHash
      *        hashed value of the input data.
      *  @param data The data that is to be hashed.
     */
-    Adler32 (const vector < byte > &data);
+    Adler32 (const vector < byte_t > &data);
 
     /** Initialize an Adler32 object by hashing an input file stream.
      *
@@ -136,7 +136,7 @@ class Adler32 : public MessageHash
      *  @param data The data that is to be hashed.
      *  @return The Adler32 value as a std::string.
     */
-    string calculateHash (const vector < byte > &data);
+    string calculateHash (const vector < byte_t > &data);
 
     /** Calculate the Adler32 value of a file.
      *

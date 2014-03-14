@@ -4,7 +4,7 @@
 ||                                                                           ||
 ||    Author: Gary Hammock, PE                                               ||
 ||    Creation Date: 2008-08-27                                              ||
-||    Last Edit Date: 2014-02-27                                             ||
+||    Last Edit Date: 2014-03-13                                             ||
 ||                                                                           ||
 ||===========================================================================||
 ||  DESCRIPTION                                                              ||
@@ -55,7 +55,7 @@
 
 /** @file sha256.h
  *  @author Gary Hammock, PE
- *  @date 2014-02-27
+ *  @date 2014-03-13
 */
 
 #ifndef _GH_SHA_256_DEF_H
@@ -101,7 +101,7 @@ class SHA256 : public MessageHash
      *        hashed value of the input data.
      *  @param data The data that is to be hashed.
     */
-    SHA256 (const vector < byte > &data);
+    SHA256 (const vector < byte_t > &data);
 
     /** Initialize an SHA256 object by hashing an input file stream.
      *
@@ -139,7 +139,7 @@ class SHA256 : public MessageHash
      *  @param data The data that is to be hashed.
      *  @return The SHA256 hash as a std::string.
     */
-    string calculateHash (const vector < byte > &data);
+    string calculateHash (const vector < byte_t > &data);
 
     /** Calculate the SHA256 hash of a file.
      *
@@ -154,10 +154,10 @@ class SHA256 : public MessageHash
     /******************************************************
     **                      Members                      **
     ******************************************************/
-    static const uint32 _K[64];  // SHA-256 constants.  These represent the
-                                 // first 32 bits of the fractional parts of
-                                 // the cube roots of the first 64 prime
-                                 // numbers.
+    static const uint32_t _K[64];  // SHA-256 constants.  These represent the
+                                   // first 32 bits of the fractional parts of
+                                   // the cube roots of the first 64 prime
+                                   // numbers.
 
     /******************************************************
     **                   Helper Methods                  **
@@ -179,7 +179,7 @@ class SHA256 : public MessageHash
      *  @param data The data that is to be hashed.
      *  @return A vector containing the padded data.
     */
-    vector < byte > _padVector (const vector < byte > &data) const;
+    vector < byte_t > _padVector (const vector < byte_t > &data) const;
 
     /** Pad the message contents to meet FIPS 180-2.
      *
@@ -191,8 +191,8 @@ class SHA256 : public MessageHash
      *  @param bitsInFile The size of the message in bits.
      *  @return none.
     */
-    void _padLastBlock (vector < uint32 > &lastBlock, uint32 dataInBlock,
-                        uint32 bitsInFile) const;
+    void _padLastBlock (vector < uint32_t > &lastBlock, uint32_t dataInBlock,
+                        uint64_t bitsInFile) const;
 
     /** The first of 6 logical functions used by SHA-256.
      *
@@ -203,7 +203,7 @@ class SHA256 : public MessageHash
      *  @param z The final 32-bit word in the function.
      *  @return A 32-bit word that is the result of the logical function.
     */
-    inline uint32 _Ch (uint32 x, uint32 y, uint32 z) const;
+    inline uint32_t _Ch (uint32_t x, uint32_t y, uint32_t z) const;
 
     /** The second of 6 logical functions used by SHA-256.
      *
@@ -214,7 +214,7 @@ class SHA256 : public MessageHash
      *  @param z The final 32-bit word in the function.
      *  @return A 32-bit word that is the result of the logical function.
     */
-    inline uint32 _Maj (uint32 x, uint32 y, uint32 z) const;
+    inline uint32_t _Maj (uint32_t x, uint32_t y, uint32_t z) const;
 
     /** The third of 6 logical functions used by SHA-256.
      *
@@ -223,7 +223,7 @@ class SHA256 : public MessageHash
      *  @param x The value that is to be used in the shifts.
      *  @return A 32-bit word that is the result of the logical function.
     */
-    inline uint32 _Sigma0 (uint32 x) const;
+    inline uint32_t _Sigma0 (uint32_t x) const;
 
     /** The fourth of 6 logical functions used by SHA-256.
      *
@@ -232,7 +232,7 @@ class SHA256 : public MessageHash
      *  @param x The value that is to be used in the shifts.
      *  @return A 32-bit word that is the result of the logical function.
     */
-    inline uint32 _Sigma1 (uint32 x) const;
+    inline uint32_t _Sigma1 (uint32_t x) const;
 
     /** The fifth of 6 logical functions used by SHA-256.
      *
@@ -241,7 +241,7 @@ class SHA256 : public MessageHash
      *  @param x The value that is to be used in the shifts.
      *  @return A 32-bit word that is the result of the logical function.
     */
-    inline uint32 _sig0 (uint32 x) const;
+    inline uint32_t _sig0 (uint32_t x) const;
 
     /** The sixth of 6 logical functions used by SHA-256.
      *
@@ -250,7 +250,7 @@ class SHA256 : public MessageHash
      *  @param x The value that is to be used in the shifts.
      *  @return A 32-bit word that is the result of the logical function.
     */
-    inline uint32 _sig1 (uint32 x) const;
+    inline uint32_t _sig1 (uint32_t x) const;
 
 };  // End class SHA256.
 

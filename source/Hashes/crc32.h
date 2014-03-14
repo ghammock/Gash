@@ -4,7 +4,7 @@
 ||                                                                           ||
 ||    Author: Gary Hammock, PE                                               ||
 ||    Creation Date: 2009-12-17                                              ||
-||    Last Edit Date: 2014-02-28                                             ||
+||    Last Edit Date: 2014-03-13                                             ||
 ||                                                                           ||
 ||===========================================================================||
 ||  DESCRIPTION                                                              ||
@@ -53,7 +53,7 @@
 
 /** @file crc32.h
  *  @author Gary Hammock, PE
- *  @date 2014-02-28
+ *  @date 2014-03-13
 */
 
 #ifndef _GH_CRC32_DEF_H
@@ -99,7 +99,7 @@ class CRC32 : public MessageHash
      *        hashed value of the input data.
      *  @param data The data that is to be hashed.
     */
-    CRC32 (const vector < byte > &data);
+    CRC32 (const vector < byte_t > &data);
 
     /** Initialize a CRC32 object by hashing an input file stream.
      *
@@ -137,7 +137,7 @@ class CRC32 : public MessageHash
      *  @param data The data that is to be hashed.
      *  @return The CRC32 value as a std::string.
     */
-    string calculateHash (const vector < byte > &data);
+    string calculateHash (const vector < byte_t > &data);
 
     /** Calculate the CRC32 value of a file.
      *
@@ -160,9 +160,9 @@ class CRC32 : public MessageHash
     // Using little-endian mode (least-significant bit first),
     // this corresponds to a bit-wise polynomial of the
     // form: 1110 1101 1011 1000 1000 0011 0010 0000 (1)
-    static const uint32 _polynomial;
+    static const uint32_t _polynomial;
 
-    uint32 _table[256];
+    uint32_t _table[256];
 
     /******************************************************
     **                   Helper Methods                  **

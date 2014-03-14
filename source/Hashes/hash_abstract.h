@@ -4,7 +4,7 @@
 ||                                                                           ||
 ||    Author: Gary Hammock, PE                                               ||
 ||    Creation Date: 2014-02-27                                              ||
-||    Last Edit Date: 2014-02-27                                             ||
+||    Last Edit Date: 2014-03-13                                             ||
 ||                                                                           ||
 ||===========================================================================||
 ||  DESCRIPTION                                                              ||
@@ -43,7 +43,7 @@
 
 /** @file hash_abstract.h
  *  @author Gary Hammock, PE
- *  @date 2014-02-27
+ *  @date 2014-03-13
 */
 
 #ifndef _GH_HASH_ABC_DEF_H
@@ -69,8 +69,10 @@ using std::hex;
 ///////////////////////////////////////
 //    Type definitions
 ////////////////////////
-typedef unsigned char byte;
-typedef unsigned int  uint32;
+typedef unsigned char      byte_t;
+typedef unsigned short     uint16_t;
+typedef unsigned int       uint32_t;
+typedef unsigned long long uint64_t;
 
 /**
  *  @class Hash An Abstract Base Class (ABC) for use in implementing
@@ -84,7 +86,7 @@ class MessageHash
     ******************************************************/
 
     /** Default constructor.  */
-    MessageHash (uint32 bits);
+    MessageHash (uint32_t bits);
 
     /** Copy constructor.
      *
@@ -102,7 +104,7 @@ class MessageHash
      *  @param bits The number of bits in the hash.
      *  @param str The std::string that is to be hashed.
     */
-    MessageHash (uint32 bits, const string &str);
+    MessageHash (uint32_t bits, const string &str);
 
     /** Default destructor.  */
     virtual ~MessageHash ();
@@ -119,7 +121,7 @@ class MessageHash
      *
      *  @pre The object is instantiated.
      *  @post none.
-     *  @return The value of the SHA256 sum as a std::string.
+     *  @return The value of the hash/checksum as a std::string.
     */
     string asString (void) const;
     
@@ -131,7 +133,7 @@ class MessageHash
      *         that is to receive the hash.
      *  @return none.
     */
-    void asArray (uint32 store[]) const;
+    void asArray (uint32_t store[]) const;
 
     ////////////////////
     //    Setters
@@ -153,7 +155,7 @@ class MessageHash
      *  @param data The data that is to be hashed.
      *  @return The hash as a std::string.
     */
-    virtual string calculateHash (const vector < byte > &data) = 0;
+    virtual string calculateHash (const vector < byte_t > &data) = 0;
 
     /** Calculate the hash of a file.
      *
@@ -211,7 +213,7 @@ class MessageHash
     /******************************************************
     **                      Members                      **
     ******************************************************/
-    vector < uint32 > _hash;
+    vector < uint32_t > _hash;
     bool _littleEndian; // A flag to denote the endianness of the system.
 
     /******************************************************
@@ -225,7 +227,7 @@ class MessageHash
      *  @param hashSizeBits The number of bits in the message hash.
      *  @return none.
     */
-    void _initialize (uint32 hashSizeBits);
+    void _initialize (uint32_t hashSizeBits);
 
     /** Determine the endianness of the system.
      *
@@ -242,7 +244,7 @@ class MessageHash
      *  @param y The number of bits to shift.
      *  @return The shifted value.
     */
-    uint32 _lcshift (uint32 value, uint32 shift) const;
+    uint32_t _lcshift (uint32_t value, uint32_t shift) const;
 
     /** Perform a bitwise right circular-shift.
      *
@@ -250,7 +252,7 @@ class MessageHash
      *  @param y The number of bits to shift.
      *  @return The shifted value.
     */
-    uint32 _rcshift (uint32 value, uint32 shift) const;
+    uint32_t _rcshift (uint32_t value, uint32_t shift) const;
 
 };  // End abstract base class MessageHash.
 

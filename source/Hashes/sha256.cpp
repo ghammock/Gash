@@ -4,7 +4,7 @@
 ||                                                                           ||
 ||    Author: Gary Hammock, PE                                               ||
 ||    Creation Date: 2008-08-27                                              ||
-||    Last Edit Date: 2014-02-27                                             ||
+||    Last Edit Date: 2014-03-13                                             ||
 ||                                                                           ||
 ||===========================================================================||
 ||  DESCRIPTION                                                              ||
@@ -55,7 +55,7 @@
 
 /** @file sha256.cpp
  *  @author Gary Hammock, PE
- *  @date 2014-02-27
+ *  @date 2014-03-13
 */
 
 #include "sha256.h"
@@ -63,7 +63,7 @@
 // SHA-256 uses a sequence of 64 constant 32-bit words.  These words
 // represent the first 32 bits of the fractional parts of the
 // cube roots of the first 64 prime numbers.
-const uint32 SHA256::_K[64] =
+const uint32_t SHA256::_K[64] =
                      { 0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
                        0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
                        0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3,
@@ -121,7 +121,7 @@ SHA256::SHA256 (const string &str)
  *        hashed value of the input data.
  *  @param data The data that is to be hashed.
 */
-SHA256::SHA256 (const vector < byte > &data)
+SHA256::SHA256 (const vector < byte_t > &data)
     : MessageHash(256)
 {
     calculateHash(data);
@@ -160,7 +160,7 @@ SHA256::~SHA256 ()  { }
 */
 string SHA256::calculateHash (const string &str)
 {
-    return calculateHash(vector < byte >(str.begin(), str.end()));
+    return calculateHash(vector < byte_t >(str.begin(), str.end()));
 }
 
 /** Calculate the SHA256 hash from an input data stream.
@@ -170,37 +170,37 @@ string SHA256::calculateHash (const string &str)
  *  @param data The data that is to be hashed.
  *  @return The SHA256 hash as a std::string.
 */
-string SHA256::calculateHash (const vector < byte > &data)
+string SHA256::calculateHash (const vector < byte_t > &data)
 {
     _initialize(256);
 
-    vector < byte > message = _padVector(data);
+    vector < byte_t > message = _padVector(data);
 
     // The message must be processed in 512-bit (64-byte) chunks
-    uint32 chunks = message.size() / 64;
+    uint32_t chunks = message.size() / 64;
 
     // We need to initialize the hash to the chaining variables.
     _initializeHash();
 
     // A message schedule of 64 32-bit words (this is the
     // message block + the schedule).
-    vector < uint32 > schedule;
+    vector < uint32_t > schedule;
 
-    uint32 offset,  // A calculated offset into the data.
-           append,  // A concatenation of 4 bytes into 1 32-bit word.
-           a,       // The chaining variable associated with _hash[0].
-           b,       // The chaining variable associated with _hash[1].
-           c,       // The chaining variable associated with _hash[2].
-           d,       // The chaining variable associated with _hash[3].
-           e,       // The chaining variable associated with _hash[4].
-           f,       // The chaining variable associated with _hash[5].
-           g,       // The chaining variable associated with _hash[6].
-           h,       // The chaining variable associated with _hash[7].
-           t1,      // A temporary word to hold the part of the avalanche.
-           t2;      // A temporary word to hold the part of the avalanche.
+    uint32_t offset,  // A calculated offset into the data.
+           append,    // A concatenation of 4 bytes into 1 32-bit word.
+           a,         // The chaining variable associated with _hash[0].
+           b,         // The chaining variable associated with _hash[1].
+           c,         // The chaining variable associated with _hash[2].
+           d,         // The chaining variable associated with _hash[3].
+           e,         // The chaining variable associated with _hash[4].
+           f,         // The chaining variable associated with _hash[5].
+           g,         // The chaining variable associated with _hash[6].
+           h,         // The chaining variable associated with _hash[7].
+           t1,        // A temporary word to hold the part of the avalanche.
+           t2;        // A temporary word to hold the part of the avalanche.
 
     // We need to process N message blocks (chunks).
-    for (uint32 i = 0; i < chunks; ++i)
+    for (uint32_t i = 0; i < chunks; ++i)
     {
         // Initialize the eight 32-bit chaining variables.
         a = _hash.at(0);
@@ -218,7 +218,7 @@ string SHA256::calculateHash (const vector < byte > &data)
         // According to FIP 180-2, we first need to prepare the
         // message schedule where the first 16 words are the
         // 512-bit message block.
-        for (uint32 j = 0; j < 16; ++j)
+        for (uint32_t j = 0; j < 16; ++j)
         {
             // The current offset into the message data.
             offset = (i * 64) + (j * 4);
@@ -228,17 +228,17 @@ string SHA256::calculateHash (const vector < byte > &data)
             // bytes to little-endian.
             if (_littleEndian)
             {
-                append =   ((uint32)message.at(offset    ) << 24)
-                         | ((uint32)message.at(offset + 1) << 16)
-                         | ((uint32)message.at(offset + 2) <<  8)
-                         | ((uint32)message.at(offset + 3)      );
+                append =   ((uint32_t)message.at(offset    ) << 24)
+                         | ((uint32_t)message.at(offset + 1) << 16)
+                         | ((uint32_t)message.at(offset + 2) <<  8)
+                         | ((uint32_t)message.at(offset + 3)      );
             }
             else
             {
-                append =   ((uint32)message.at(offset    )      )
-                         | ((uint32)message.at(offset + 1) <<  8)
-                         | ((uint32)message.at(offset + 2) << 16)
-                         | ((uint32)message.at(offset + 3) << 24);
+                append =   ((uint32_t)message.at(offset    )      )
+                         | ((uint32_t)message.at(offset + 1) <<  8)
+                         | ((uint32_t)message.at(offset + 2) << 16)
+                         | ((uint32_t)message.at(offset + 3) << 24);
             }
 
             schedule.at(j) = append;
@@ -248,7 +248,7 @@ string SHA256::calculateHash (const vector < byte > &data)
         // The remaining 48 words in the message schedule are computed
         // from the logical functions using the previous words in the
         // schedule for avalanching the later indices in the schedule.
-        for (uint32 j = 16; j < 64; ++j)
+        for (uint32_t j = 16; j < 64; ++j)
         {
             schedule.at(j) =   _sig1(schedule.at(j -  2))
                                    + schedule.at(j -  7)
@@ -258,7 +258,7 @@ string SHA256::calculateHash (const vector < byte > &data)
         }  // End for-loop j [16, 63].
 
         // The actual avalance effect is performed in this loop.
-        for (uint32 j = 0; j < 64; ++j)
+        for (uint32_t j = 0; j < 64; ++j)
         {
             t1 = h + _Sigma1(e) + _Ch(e, f, g) + _K[j] + schedule.at(j);
             t2 = _Sigma0(a) + _Maj(a, b, c);
@@ -303,13 +303,13 @@ string SHA256::calculateHash (ifstream &file)
     if (file.fail() || !file.good())
         return asString();
 
-    uint32 filesize,    // The size of the file in bytes.
-           paddedSize,  // The size of the data after padding.
-           filebits;    // The filesize in bits.
+    uint64_t filesize,    // The size of the file in bytes.
+             paddedSize,  // The size of the data after padding.
+             filebits;    // The filesize in bits.
 
     // We need to get the size of the file.
     file.seekg(0, ios::end);
-    filesize = (uint32)file.tellg();
+    filesize = (uint64_t)file.tellg();
     filebits = filesize * 8;
     file.seekg(0);  // Return to the head of the file.
 
@@ -319,24 +319,24 @@ string SHA256::calculateHash (ifstream &file)
     while ((paddedSize % 64) != 0) ++paddedSize;
 
     // The message must be processed in 512-bit (64-byte) chunks
-    uint32 chunks = paddedSize / 64;
+    uint64_t chunks = paddedSize >> 6;  // Divide by 64.
 
     // A message schedule of 64 32-bit words (this is the
     // message block + the schedule).
-    vector < uint32 > schedule;
+    vector < uint32_t > schedule;
 
-    uint32 append,  // A concatenation of 4 bytes into 1 32-bit word.
-           a,       // The chaining variable associated with _hash[0].
-           b,       // The chaining variable associated with _hash[1].
-           c,       // The chaining variable associated with _hash[2].
-           d,       // The chaining variable associated with _hash[3].
-           e,       // The chaining variable associated with _hash[4].
-           f,       // The chaining variable associated with _hash[5].
-           g,       // The chaining variable associated with _hash[6].
-           h,       // The chaining variable associated with _hash[7].
-           t1,      // A temporary word to hold the part of the avalanche.
-           t2,      // A temporary word to hold the part of the avalanche.
-           blockData;  // The number of message bytes in each block.
+    uint32_t append,    // A concatenation of 4 bytes into 1 32-bit word.
+             a,         // The chaining variable associated with _hash[0].
+             b,         // The chaining variable associated with _hash[1].
+             c,         // The chaining variable associated with _hash[2].
+             d,         // The chaining variable associated with _hash[3].
+             e,         // The chaining variable associated with _hash[4].
+             f,         // The chaining variable associated with _hash[5].
+             g,         // The chaining variable associated with _hash[6].
+             h,         // The chaining variable associated with _hash[7].
+             t1,        // A temporary word to hold the part of the avalanche.
+             t2,        // A temporary word to hold the part of the avalanche.
+             blockData; // The number of message bytes in each block.
 
     bool endOfStream = false;
 
@@ -344,7 +344,7 @@ string SHA256::calculateHash (ifstream &file)
     _initializeHash();
 
     // We need to process N message blocks (chunks).
-    for (uint32 i = 0; i < chunks; ++i)
+    for (uint64_t i = 0; i < chunks; ++i)
     {
         // Initialize the eight 32-bit chaining variables.
         a = _hash.at(0);
@@ -363,7 +363,7 @@ string SHA256::calculateHash (ifstream &file)
         // According to FIP 180-2, we first need to prepare the
         // message schedule where the first 16 words are the
         // 512-bit message block.
-        for (uint32 j = 0; j < 16; ++j)
+        for (uint32_t j = 0; j < 16; ++j)
         {
             // Initialize the data to be appended.
             append = 0x00000000;
@@ -371,7 +371,7 @@ string SHA256::calculateHash (ifstream &file)
             // The words are appended in little-endian format, i.e.
             // if the hardware is big-endian, we have to convert the
             // bytes to little-endian.
-            for (uint32 m = 0; (m < 4) && !endOfStream; ++m)
+            for (uint32_t m = 0; (m < 4) && !endOfStream; ++m)
             {
                 // Check for EOF.
                 if (file.peek() == -1)
@@ -380,9 +380,9 @@ string SHA256::calculateHash (ifstream &file)
                 else
                 {
                     if (_littleEndian)
-                        append |= ((uint32)file.get() << (24 - (m * 8)));
+                        append |= ((uint32_t)file.get() << (24 - (m * 8)));
                     else
-                        append |= ((uint32)file.get() <<       (m * 8) );
+                        append |= ((uint32_t)file.get() <<       (m * 8) );
 
                     // Increment the number of message bytes.
                     ++blockData;
@@ -399,7 +399,7 @@ string SHA256::calculateHash (ifstream &file)
         // The remaining 48 words in the message schedule are computed
         // from the logical functions using the previous words in the
         // schedule for avalanching the later indices in the schedule.
-        for (uint32 j = 16; j < 64; ++j)
+        for (uint32_t j = 16; j < 64; ++j)
         {
             schedule.at(j) =   _sig1(schedule.at(j -  2))
                                    + schedule.at(j -  7)
@@ -409,7 +409,7 @@ string SHA256::calculateHash (ifstream &file)
         }  // End for-loop j [16, 63].
 
         // The actual avalance effect is performed in this loop.
-        for (uint32 j = 0; j < 64; ++j)
+        for (uint32_t j = 0; j < 64; ++j)
         {
             t1 = h + _Sigma1(e) + _Ch(e, f, g) + _K[j] + schedule.at(j);
             t2 = _Sigma0(a) + _Maj(a, b, c);
@@ -475,35 +475,35 @@ void SHA256::_initializeHash (void)
  *  @param data The data that is to be hashed.
  *  @return A vector containing the padded data.
 */
-vector < byte > SHA256::_padVector (const vector < byte > &data) const
+vector < byte_t > SHA256::_padVector (const vector < byte_t > &data) const
 {
-    vector < byte > message = data;
+    vector < byte_t > message = data;
 
-    uint32 size = data.size();  // The size of the original data.
+    uint32_t size = data.size();  // The size of the original data.
 
     // We need to append 9 bytes to the data and fill the extra padding
     // with zeros to get a 512-bit boundary.
-    uint32 datasize = data.size() + 9;
+    uint32_t datasize = data.size() + 9;
     while ((datasize % 64) != 0) ++datasize;
 
     // The first padded bit is a '1' followed by zeros until we reach the
     // the final 64-bits of the message.
     message.push_back(0x80);
-    for (uint32 i = (size + 1); i < datasize; ++i)
+    for (uint32_t i = (size + 1); i < datasize; ++i)
         message.push_back(0x00);
 
     // The final 64-bits (8-bytes) is the 64-bit representation of the
     // message size in bits presented as a little endian value.  For
     // simplicity, I'll only use a 32-bit value (assume the MSBs are 0x00).
-    uint32 dataBits = size * 8;
+    uint32_t dataBits = size * 8;
     // message.at(datasize - 8) = 0x00;
     // message.at(datasize - 7) = 0x00;
     // message.at(datasize - 6) = 0x00;
     // message.at(datasize - 5) = 0x00;
-    message.at(datasize - 4) = (byte)((dataBits & 0xff000000) >> 24);
-    message.at(datasize - 3) = (byte)((dataBits & 0x00ff0000) >> 16);
-    message.at(datasize - 2) = (byte)((dataBits & 0x0000ff00) >>  8);
-    message.at(datasize - 1) = (byte)((dataBits & 0x000000ff)      );
+    message.at(datasize - 4) = (byte_t)((dataBits & 0xff000000) >> 24);
+    message.at(datasize - 3) = (byte_t)((dataBits & 0x00ff0000) >> 16);
+    message.at(datasize - 2) = (byte_t)((dataBits & 0x0000ff00) >>  8);
+    message.at(datasize - 1) = (byte_t)((dataBits & 0x000000ff)      );
 
     return message;
 }
@@ -518,17 +518,17 @@ vector < byte > SHA256::_padVector (const vector < byte > &data) const
  *  @param bitsInFile The size of the message in bits.
  *  @return none.
 */
-void SHA256::_padLastBlock (vector < uint32 > &lastBlock, uint32 dataInBlock,
-                            uint32 bitsInFile) const
+void SHA256::_padLastBlock (vector < uint32_t > &lastBlock, uint32_t dataInBlock,
+                            uint64_t bitsInFile) const
 {
     // If there is no more data, we need to pad the block.
     // The first padded bit is a '1' followed by zeros until we reach the
     // the final 64-bits of the message.
-    uint32 shift = (dataInBlock % 4);
+    uint32_t shift = (dataInBlock % 4);
 
-    uint32 paddingWord = (dataInBlock / 4) % 16;
+    uint32_t paddingWord = (dataInBlock / 4) % 16;
 
-    uint32 append = lastBlock.at(paddingWord);
+    uint32_t append = lastBlock.at(paddingWord);
 
     if (_littleEndian)
         append |= (0x00000080 << (24 - (shift * 8)));
@@ -537,15 +537,14 @@ void SHA256::_padLastBlock (vector < uint32 > &lastBlock, uint32 dataInBlock,
 
     lastBlock.at(paddingWord) = append;
 
-    for (uint32 i = (paddingWord + 1); i < 16; ++i)
+    for (uint32_t i = (paddingWord + 1); i < 16; ++i)
         lastBlock.at(i) = 0x00000000;
 
     // The final 64-bits (8-bytes) is the 64-bit representation of the
-    // message size in bits presented as a big endian value.  For simplicity,
-    // I'll only use a 32-bit value (assume the MSBs are 0x00).
+    // message size in bits presented as a big endian value.
 
-    // lastBlock.at(14) = 0x00000000;  // 64-bit MSBs.
-    lastBlock.at(15) = bitsInFile;
+    lastBlock.at(14) = (uint32_t)((bitsInFile >> 16) >> 16);  // 64-bit MSBs.
+    lastBlock.at(15) = (uint32_t)(bitsInFile & 0x00000000ffffffff);
 
     return;
 }
@@ -559,7 +558,7 @@ void SHA256::_padLastBlock (vector < uint32 > &lastBlock, uint32 dataInBlock,
  *  @param z The final 32-bit word in the function.
  *  @return A 32-bit word that is the result of the logical function.
 */
-inline uint32 SHA256::_Ch (uint32 x, uint32 y, uint32 z) const
+inline uint32_t SHA256::_Ch (uint32_t x, uint32_t y, uint32_t z) const
 {  return ((x & y) ^ (~x & z));  }
 
 /** The second of 6 logical functions used by SHA-256.
@@ -571,7 +570,7 @@ inline uint32 SHA256::_Ch (uint32 x, uint32 y, uint32 z) const
  *  @param z The final 32-bit word in the function.
  *  @return A 32-bit word that is the result of the logical function.
 */
-inline uint32 SHA256::_Maj (uint32 x, uint32 y, uint32 z) const
+inline uint32_t SHA256::_Maj (uint32_t x, uint32_t y, uint32_t z) const
 {  return ((x & y) ^ (x & z) ^ (y & z));  }
 
 /** The third of 6 logical functions used by SHA-256.
@@ -581,7 +580,7 @@ inline uint32 SHA256::_Maj (uint32 x, uint32 y, uint32 z) const
  *  @param x The value that is to be used in the shifts.
  *  @return A 32-bit word that is the result of the logical function.
 */
-inline uint32 SHA256::_Sigma0 (uint32 x) const
+inline uint32_t SHA256::_Sigma0 (uint32_t x) const
 {  return (_rcshift(x, 2) ^ _rcshift(x, 13) ^ _rcshift(x, 22));  }
 
 /** The fourth of 6 logical functions used by SHA-256.
@@ -591,7 +590,7 @@ inline uint32 SHA256::_Sigma0 (uint32 x) const
  *  @param x The value that is to be used in the shifts.
  *  @return A 32-bit word that is the result of the logical function.
 */
-inline uint32 SHA256::_Sigma1 (uint32 x) const
+inline uint32_t SHA256::_Sigma1 (uint32_t x) const
 {  return (_rcshift(x, 6) ^ _rcshift(x, 11) ^ _rcshift(x, 25));  }
 
 /** The fifth of 6 logical functions used by SHA-256.
@@ -601,7 +600,7 @@ inline uint32 SHA256::_Sigma1 (uint32 x) const
  *  @param x The value that is to be used in the shifts.
  *  @return A 32-bit word that is the result of the logical function.
 */
-inline uint32 SHA256::_sig0 (uint32 x) const
+inline uint32_t SHA256::_sig0 (uint32_t x) const
 {  return (_rcshift(x, 7) ^ _rcshift(x, 18) ^ (x >> 3));  }
 
 /** The sixth of 6 logical functions used by SHA-256.
@@ -611,5 +610,5 @@ inline uint32 SHA256::_sig0 (uint32 x) const
  *  @param x The value that is to be used in the shifts.
  *  @return A 32-bit word that is the result of the logical function.
 */
-inline uint32 SHA256::_sig1 (uint32 x) const
+inline uint32_t SHA256::_sig1 (uint32_t x) const
 {  return (_rcshift(x, 17) ^ _rcshift(x, 19) ^ (x >> 10));  }

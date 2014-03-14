@@ -4,7 +4,7 @@
 ||                                                                           ||
 ||    Author: Gary Hammock, PE                                               ||
 ||    Creation Date: 2008-09-17                                              ||
-||    Last Edit Date: 2014-02-27                                             ||
+||    Last Edit Date: 2014-03-13                                             ||
 ||                                                                           ||
 ||===========================================================================||
 ||  DESCRIPTION                                                              ||
@@ -56,7 +56,7 @@
 
 /** @file md5.cpp
  *  @author Gary Hammock, PE
- *  @date 2014-02-27
+ *  @date 2014-03-13
 */
 
 #include "md5.h"
@@ -100,7 +100,7 @@ MD5::MD5 (const string &str)
  *        hashed value of the input data.
  *  @param data The data that is to be hashed.
 */
-MD5::MD5 (const vector < byte > &data)
+MD5::MD5 (const vector < byte_t > &data)
     : MessageHash(128)
 {
     calculateHash(data);
@@ -139,7 +139,7 @@ MD5::~MD5 ()  { }
 */
 string MD5::calculateHash (const string &str)
 {
-    return calculateHash(vector < byte >(str.begin(), str.end()));
+    return calculateHash(vector < byte_t >(str.begin(), str.end()));
 }
 
 /** Calculate the MD5 value from an input data stream.
@@ -149,29 +149,29 @@ string MD5::calculateHash (const string &str)
  *  @param data The data that is to be hashed.
  *  @return The MD5 value as a std::string.
 */
-string MD5::calculateHash (const vector < byte > &data)
+string MD5::calculateHash (const vector < byte_t > &data)
 {
     _initialize(128);
 
-    vector < byte > message = _padVector(data);
+    vector < byte_t > message = _padVector(data);
 
     // The message must be processed in 512-bit (64-byte) chunks
-    uint32 chunks = message.size() / 64;
+    uint32_t chunks = message.size() / 64;
 
     // We need to initialize the hash to the chaining variables.
     _initializeHash();
 
     // The 512-bit (16, 32-bit) message block.
-    vector < uint32 > block;
+    vector < uint32_t > block;
 
-    uint32 offset,  // A calculated offset into the data.
-           append,  // A concatenation of 4 bytes into 1 32-bit word.
-           A,       // The chaining variable associated with _hash[0].
-           B,       // The chaining variable associated with _hash[1].
-           C,       // The chaining variable associated with _hash[2].
-           D;       // The chaining variable associated with _hash[3].
+    uint32_t offset,  // A calculated offset into the data.
+             append,  // A concatenation of 4 bytes into 1 32-bit word.
+             A,       // The chaining variable associated with _hash[0].
+             B,       // The chaining variable associated with _hash[1].
+             C,       // The chaining variable associated with _hash[2].
+             D;       // The chaining variable associated with _hash[3].
 
-    for (uint32 i = 0; i < chunks; ++i)
+    for (uint32_t i = 0; i < chunks; ++i)
     {
         // Initialize the four 32-bit chaining variables.
         A = _hash[0];
@@ -183,7 +183,7 @@ string MD5::calculateHash (const vector < byte > &data)
         block.assign(16, 0x00000000);
 
         // We need to concatenate the message contents into 512-bit block.
-        for (uint32 j = 0; j < 16; ++j)
+        for (uint32_t j = 0; j < 16; ++j)
         {
             // The current offset into the message data.
             offset = (i * 64) + (j * 4);
@@ -193,17 +193,17 @@ string MD5::calculateHash (const vector < byte > &data)
             // bytes to big-endian.
             if (_littleEndian)
             {
-                append =   ((uint32)message.at(offset    )      )
-                         | ((uint32)message.at(offset + 1) <<  8)
-                         | ((uint32)message.at(offset + 2) << 16)
-                         | ((uint32)message.at(offset + 3) << 24);
+                append =   ((uint32_t)message.at(offset    )      )
+                         | ((uint32_t)message.at(offset + 1) <<  8)
+                         | ((uint32_t)message.at(offset + 2) << 16)
+                         | ((uint32_t)message.at(offset + 3) << 24);
             }
             else
             {
-                append =   ((uint32)message.at(offset    ) << 24)
-                         | ((uint32)message.at(offset + 1) << 16)
-                         | ((uint32)message.at(offset + 2) <<  8)
-                         | ((uint32)message.at(offset + 3)      );
+                append =   ((uint32_t)message.at(offset    ) << 24)
+                         | ((uint32_t)message.at(offset + 1) << 16)
+                         | ((uint32_t)message.at(offset + 2) <<  8)
+                         | ((uint32_t)message.at(offset + 3)      );
             }
 
             block.at(j) = append;
@@ -250,13 +250,13 @@ string MD5::calculateHash (ifstream &file)
     if (file.fail() || !file.good())
         return "00000000000000000000000000000000";
 
-    uint32 filesize,    // The size of the file in bytes.
-           paddedSize,  // The size of the data after padding.
-           filebits;    // The filesize in bits.
+    uint64_t filesize,    // The size of the file in bytes.
+             paddedSize,  // The size of the data after padding.
+             filebits;    // The filesize in bits.
 
     // We need to get the size of the file.
     file.seekg(0, ios::end);
-    filesize = (uint32)file.tellg();
+    filesize = (uint64_t)file.tellg();
     filebits = filesize * 8;
     file.seekg(0);  // Return to the head of the file.
 
@@ -266,24 +266,24 @@ string MD5::calculateHash (ifstream &file)
     while ((paddedSize % 64) != 0) ++paddedSize;
 
     // The message must be processed in 512-bit (64-byte) chunks
-    uint32 chunks = paddedSize / 64;
+    uint64_t chunks = paddedSize >> 6;  // Divide by 64.
 
     // The 512-bit (16, 32-bit) message block.
-    vector < uint32 > block;
+    vector < uint32_t > block;
 
-    uint32 append,     // A concatenation of 4 bytes into 1 32-bit word.
-           A,          // The chaining variable associated with _hash[0].
-           B,          // The chaining variable associated with _hash[1].
-           C,          // The chaining variable associated with _hash[2].
-           D,          // The chaining variable associated with _hash[3].
-           blockData;  // The number of message bytes in each block.
+    uint32_t append,     // A concatenation of 4 bytes into 1 32-bit word.
+             A,          // The chaining variable associated with _hash[0].
+             B,          // The chaining variable associated with _hash[1].
+             C,          // The chaining variable associated with _hash[2].
+             D,          // The chaining variable associated with _hash[3].
+             blockData;  // The number of message bytes in each block.
 
     bool endOfStream = false;
 
     // We need to initialize the hash to the chaining variables.
     _initializeHash();
 
-    for (uint32 i = 0; i < chunks; ++i)
+    for (uint64_t i = 0; i < chunks; ++i)
     {
         // Initialize the four 32-bit chaining variables.
         A = _hash[0];
@@ -296,7 +296,7 @@ string MD5::calculateHash (ifstream &file)
         blockData = 0;
 
         // We need to concatenate the message contents into 512-bit block.
-        for (uint32 j = 0; j < 16; ++j)
+        for (uint32_t j = 0; j < 16; ++j)
         {
             // Initialize the data to be appended.
             append = 0x00000000;
@@ -304,7 +304,7 @@ string MD5::calculateHash (ifstream &file)
             // With MD5, the words are appended in big-endian format, i.e.
             // if the hardware is little-endian, we have to convert the
             // bytes to big-endian.
-            for (uint32 m = 0; (m < 4) && !endOfStream; ++m)
+            for (uint32_t m = 0; (m < 4) && !endOfStream; ++m)
             {
                 // Check for EOF.
                 if (file.peek() == -1)
@@ -313,9 +313,9 @@ string MD5::calculateHash (ifstream &file)
                 else
                 {
                     if (_littleEndian)
-                        append |= ((uint32)file.get() << (m * 8));
+                        append |= ((uint32_t)file.get() << (m * 8));
                     else
-                        append |= ((uint32)file.get() << (24 - (m * 8)));
+                        append |= ((uint32_t)file.get() << (24 - (m * 8)));
 
                     // Increment the number of message bytes.
                     ++blockData;
@@ -399,35 +399,35 @@ void MD5::_initializeHash (void)
  *  @param data The data that is to be hashed.
  *  @return A vector containing the padded data.
 */
-vector < byte > MD5::_padVector (const vector < byte > &data) const
+vector < byte_t > MD5::_padVector (const vector < byte_t > &data) const
 {
-    vector < byte > message = data;
+    vector < byte_t > message = data;
 
-    uint32 size = data.size();  // The size of the original data.
+    uint32_t size = data.size();  // The size of the original data.
 
     // We need to append 9 bytes to the data and fill the extra padding
     // with zeros to get a 512-bit boundary.
-    uint32 datasize = data.size() + 9;
+    uint32_t datasize = data.size() + 9;
     while ((datasize % 64) != 0) ++datasize;
 
     // The first padded bit is a '1' followed by zeros until we reach the
     // the final 64-bits of the message.
     message.push_back(0x80);
-    for (uint32 i = (size + 1); i < datasize; ++i)
+    for (uint32_t i = (size + 1); i < datasize; ++i)
         message.push_back(0x00);
 
     // The final 64-bits (8-bytes) is the 64-bit representation of the
     // message size in bits presented as a big endian value.  For simplicity,
     // I'll only use a 32-bit value (assume the MSBs are 0x00).
-    uint32 dataBits = size * 8;
+    uint32_t dataBits = size * 8;
     // message.at(datasize - 1) = 0x00;
     // message.at(datasize - 2) = 0x00;
     // message.at(datasize - 3) = 0x00;
     // message.at(datasize - 4) = 0x00;
-    message.at(datasize - 5) = (byte)((dataBits & 0xff000000) >> 24);
-    message.at(datasize - 6) = (byte)((dataBits & 0x00ff0000) >> 16);
-    message.at(datasize - 7) = (byte)((dataBits & 0x0000ff00) >>  8);
-    message.at(datasize - 8) = (byte)((dataBits & 0x000000ff)      );
+    message.at(datasize - 5) = (byte_t)((dataBits & 0xff000000) >> 24);
+    message.at(datasize - 6) = (byte_t)((dataBits & 0x00ff0000) >> 16);
+    message.at(datasize - 7) = (byte_t)((dataBits & 0x0000ff00) >>  8);
+    message.at(datasize - 8) = (byte_t)((dataBits & 0x000000ff)      );
 
     return message;
 }
@@ -442,17 +442,17 @@ vector < byte > MD5::_padVector (const vector < byte > &data) const
  *  @param bitsInFile The size of the message in bits.
  *  @return none.
 */
-void MD5::_padLastBlock (vector < uint32 > &lastBlock, uint32 dataInBlock,
-                         uint32 bitsInFile) const
+void MD5::_padLastBlock (vector < uint32_t > &lastBlock, uint32_t dataInBlock,
+                         uint64_t bitsInFile) const
 {
     // If there is no more data, we need to pad the block.
     // The first padded bit is a '1' followed by zeros until we reach the
     // the final 64-bits of the message.
-    uint32 shift = (dataInBlock % 4);
+    uint32_t shift = (dataInBlock % 4);
 
-    uint32 paddingWord = (dataInBlock / 4) % 16;
+    uint32_t paddingWord = (dataInBlock / 4) % 16;
 
-    uint32 append = lastBlock.at(paddingWord);
+    uint32_t append = lastBlock.at(paddingWord);
 
     if (_littleEndian)
         append |= (0x00000080 << (shift * 8));
@@ -461,15 +461,14 @@ void MD5::_padLastBlock (vector < uint32 > &lastBlock, uint32 dataInBlock,
 
     lastBlock.at(paddingWord) = append;
 
-    for (uint32 i = (paddingWord + 1); i < 16; ++i)
+    for (uint32_t i = (paddingWord + 1); i < 16; ++i)
         lastBlock.at(i) = 0x00000000;
 
     // The final 64-bits (8-bytes) is the 64-bit representation of the
-    // message size in bits presented as a big endian value.  For simplicity,
-    // I'll only use a 32-bit value (assume the MSBs are 0x00).
+    // message size in bits presented as a big endian value.
 
-    // lastBlock.at(15) = 0x00000000;  // 64-bit MSBs.
-    lastBlock.at(14) = bitsInFile;
+    lastBlock.at(15) = (uint32_t)((bitsInFile >> 16) >> 16);  // 64-bit MSBs.
+    lastBlock.at(14) = (uint32_t)(bitsInFile & 0x00000000ffffffff);
 
     return;
 }
@@ -483,7 +482,7 @@ void MD5::_padLastBlock (vector < uint32 > &lastBlock, uint32 dataInBlock,
 void MD5::_convertToLittleEndian (void)
 {
     // Flip the byte order of the 32-bit words.
-    for (uint32 i = 0; i < 4; ++i)
+    for (uint32_t i = 0; i < 4; ++i)
     {
         _hash[i] =   ((_hash[i] & 0x000000ff) << 24)
                    + ((_hash[i] & 0x0000ff00) << 8)
@@ -501,7 +500,7 @@ void MD5::_convertToLittleEndian (void)
  *  @param b512 The 512-bit message block (16, 32-bit words).
  *  @return none.
 */
-void MD5::_round1 (vector < uint32 > b512)
+void MD5::_round1 (vector < uint32_t > b512)
 {
     ///////////////////////////////////////////////////////////////////////
     // There are four rounds per chunk that are performed to compute
@@ -537,7 +536,7 @@ void MD5::_round1 (vector < uint32 > b512)
  *  @param b512 The 512-bit message block (16, 32-bit words).
  *  @return none.
 */
-void MD5::_round2 (vector < uint32 > b512)
+void MD5::_round2 (vector < uint32_t > b512)
 {
     ///////////////////////////////////////////////////////////////////////
     // There are four rounds per chunk that are performed to compute
@@ -573,7 +572,7 @@ void MD5::_round2 (vector < uint32 > b512)
 *  @param b512 The 512-bit message block (16, 32-bit words).
 *  @return none.
 */
-void MD5::_round3 (vector < uint32 > b512)
+void MD5::_round3 (vector < uint32_t > b512)
 {
     ///////////////////////////////////////////////////////////////////////
     // There are four rounds per chunk that are performed to compute
@@ -609,7 +608,7 @@ void MD5::_round3 (vector < uint32 > b512)
 *  @param b512 The 512-bit message block (16, 32-bit words).
 *  @return none.
 */
-void MD5::_round4 (vector < uint32 > b512)
+void MD5::_round4 (vector < uint32_t > b512)
 {
     ///////////////////////////////////////////////////////////////////////
     // There are four rounds per chunk that are performed to compute
@@ -655,11 +654,11 @@ void MD5::_round4 (vector < uint32 > b512)
 *           t[i] = 2^32 * abs(sin(i)),  where i is in radians.
 *  @return none.
 */
-void MD5::_FF (uint32 &a, uint32 b, uint32 c, uint32 d,
-               uint32 Mi, uint32 s, uint32 t)
+void MD5::_FF (uint32_t &a, uint32_t b, uint32_t c, uint32_t d,
+               uint32_t Mi, uint32_t s, uint32_t t)
 {
     // This is the non-linear function used in Round 1.
-    uint32 F_func = (b & c) | ((~b) & d);
+    uint32_t F_func = (b & c) | ((~b) & d);
 
     a = (b + _lcshift((a + F_func + Mi + t), s));
 
@@ -680,11 +679,11 @@ void MD5::_FF (uint32 &a, uint32 b, uint32 c, uint32 d,
 *           t[i] = 2^32 * abs(sin(i)),  where i is in radians.
 *  @return none.
 */
-void MD5::_GG (uint32 &a, uint32 b, uint32 c, uint32 d,
-               uint32 Mi, uint32 s, uint32 t)
+void MD5::_GG (uint32_t &a, uint32_t b, uint32_t c, uint32_t d,
+               uint32_t Mi, uint32_t s, uint32_t t)
 {
     // This is the non-linear function used in Round 2.
-    uint32 G_func = (b & d) | (c & (~d));
+    uint32_t G_func = (b & d) | (c & (~d));
 
     a = (b + _lcshift((a + G_func + Mi + t), s));
 
@@ -705,11 +704,11 @@ void MD5::_GG (uint32 &a, uint32 b, uint32 c, uint32 d,
 *           t[i] = 2^32 * abs(sin(i)),  where i is in radians.
 *  @return none.
 */
-void MD5::_HH (uint32 &a, uint32 b, uint32 c, uint32 d,
-               uint32 Mi, uint32 s, uint32 t)
+void MD5::_HH (uint32_t &a, uint32_t b, uint32_t c, uint32_t d,
+               uint32_t Mi, uint32_t s, uint32_t t)
 {
     // This is the non-linear function used in Round 3.
-    uint32 H_func = b ^ c ^ d;
+    uint32_t H_func = b ^ c ^ d;
 
     a = (b + _lcshift((a + H_func + Mi + t), s));
 
@@ -730,11 +729,11 @@ void MD5::_HH (uint32 &a, uint32 b, uint32 c, uint32 d,
 *           t[i] = 2^32 * abs(sin(i)),  where i is in radians.
 *  @return none.
 */
-void MD5::_II (uint32 &a, uint32 b, uint32 c, uint32 d,
-               uint32 Mi, uint32 s, uint32 t)
+void MD5::_II (uint32_t &a, uint32_t b, uint32_t c, uint32_t d,
+               uint32_t Mi, uint32_t s, uint32_t t)
 {
     // This is the non-linear function used in Round 4.
-    uint32 I_func = c ^ (b | (~d));
+    uint32_t I_func = c ^ (b | (~d));
 
     a = (b + _lcshift((a + I_func + Mi + t), s));
 

@@ -50,6 +50,7 @@ int main (int argc, char *argv[])
     ifstream file;  // A handle to the file to be hashed.
     string filename(argv[argc - 1]);
     stringstream arg;
+    bool noFile = false;
 
     cout << "Gash version: " << _VERSION_ << endl;
 
@@ -70,29 +71,33 @@ int main (int argc, char *argv[])
     if (argc == 2)
     {
         if (arg.str() == "-c")
+        {
+            noFile = true;
             dispCredits();
+        }
         else if (arg.str() == "-h")
+        {
+            noFile = true;
             displayHelp();
-
-        // Tidy up the console.
-        cout << endl << endl;
-
-        return 0;
+        }
     }
 
     // Check to make sure that we can access the file specified by the caller.
-    if (!getFileHandle(filename, file))
+    if (!noFile)
     {
-        cerr << "Error: could not open file \"" << filename << "\".";
+        if (!getFileHandle(filename, file))
+        {
+            cerr << "Error: could not open file \"" << filename << "\".";
 
-        return 1;
+            return 1;
+        }
+
+        // Echo the name of the file.
+        cout << "File: " << filename << endl;
     }
 
-    // Echo the name of the file.
-    cout << "File: " << filename << endl;
-
     // If no specific hash algoritm is given use MD5.
-    if (argc == 2)
+    if ((argc == 2) && (!noFile))
         cout << "MD5: " << MD5(file);
     else
     {

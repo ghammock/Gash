@@ -4,7 +4,7 @@
 ||                                                                           ||
 ||    Author: Gary Hammock, PE                                               ||
 ||    Creation Date: 2009-12-18                                              ||
-||    Last Edit Date: 2014-02-28                                             ||
+||    Last Edit Date: 2014-03-13                                             ||
 ||                                                                           ||
 ||===========================================================================||
 ||  DESCRIPTION                                                              ||
@@ -52,7 +52,7 @@
 
 /** @file elf.cpp
  *  @author Gary Hammock, PE
- *  @date 2014-02-28
+ *  @date 2014-03-13
 */
 #include "elf.h"
 
@@ -95,7 +95,7 @@ ELF::ELF (const string &str)
  *        hashed value of the input data.
  *  @param data The data that is to be hashed.
 */
-ELF::ELF (const vector < byte > &data)
+ELF::ELF (const vector < byte_t > &data)
     : MessageHash(32)
 {
     calculateHash(data);
@@ -134,7 +134,7 @@ ELF::~ELF ()  { }
 */
 string ELF::calculateHash (const string &str)
 {
-    return calculateHash(vector < byte >(str.begin(), str.end()));
+    return calculateHash(vector < byte_t >(str.begin(), str.end()));
 }
 
 /** Calculate the ELF value from an input data stream.
@@ -144,16 +144,16 @@ string ELF::calculateHash (const string &str)
  *  @param data The data that is to be hashed.
  *  @return The ELF value as a std::string.
 */
-string ELF::calculateHash (const vector < byte > &data)
+string ELF::calculateHash (const vector < byte_t > &data)
 {
     _initialize(32);
 
-    uint32 temp;
+    uint32_t temp;
 
-    vector < byte >::const_iterator it;
+    vector < byte_t >::const_iterator it;
     for (it = data.begin(); it != data.end(); ++it)
     {
-        _hash.at(0) = (_hash.at(0) << 4) + (uint32)(*it);
+        _hash.at(0) = (_hash.at(0) << 4) + (uint32_t)(*it);
 
         temp = _hash.at(0) & 0xf0000000;
 
@@ -182,14 +182,14 @@ string ELF::calculateHash (ifstream &file)
     if (file.fail() || !file.good())
         return asString();
 
-    uint32 temp;
-    byte value;
+    uint32_t temp;
+    byte_t value;
 
     while (file.peek() != -1)
     {
         value = file.get();
 
-        _hash.at(0) = (_hash.at(0) << 4) + (uint32)value;
+        _hash.at(0) = (_hash.at(0) << 4) + (uint32_t)value;
 
         temp = _hash.at(0) & 0xf0000000;
 

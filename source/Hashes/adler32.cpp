@@ -4,7 +4,7 @@
 ||                                                                           ||
 ||    Author: Gary Hammock, PE                                               ||
 ||    Creation Date: 2009-12-17                                              ||
-||    Last Edit Date: 2014-02-28                                             ||
+||    Last Edit Date: 2014-03-13                                             ||
 ||                                                                           ||
 ||===========================================================================||
 ||  DESCRIPTION                                                              ||
@@ -52,7 +52,7 @@
 
 /** @file adler32.h
  *  @author Gary Hammock, PE
- *  @date 2014-02-28
+ *  @date 2014-03-13
 */
 
 #include "adler32.h"
@@ -96,7 +96,7 @@ Adler32::Adler32 (const string &str)
  *        hashed value of the input data.
  *  @param data The data that is to be hashed.
 */
-Adler32::Adler32 (const vector < byte > &data)
+Adler32::Adler32 (const vector < byte_t > &data)
     : MessageHash(32)
 {
     calculateHash(data);
@@ -135,7 +135,7 @@ Adler32::~Adler32 ()  { }
 */
 string Adler32::calculateHash (const string &str)
 {
-    return calculateHash(vector < byte >(str.begin(), str.end()));
+    return calculateHash(vector < byte_t >(str.begin(), str.end()));
 }
 
 /** Calculate the Adler32 value from an input data stream.
@@ -145,14 +145,14 @@ string Adler32::calculateHash (const string &str)
  *  @param data The data that is to be hashed.
  *  @return The Adler32 value as a std::string.
 */
-string Adler32::calculateHash (const vector < byte > &data)
+string Adler32::calculateHash (const vector < byte_t > &data)
 {
     _initialize(32);
 
     unsigned short A = 0x0001,
                    B = 0x0000;
 
-    vector < byte >::const_iterator it;
+    vector < byte_t >::const_iterator it;
     for (it = data.begin(); it != data.end(); ++it)
     {
         A += (unsigned short)(*it);
@@ -162,7 +162,7 @@ string Adler32::calculateHash (const vector < byte > &data)
         B %= 65521;
     }
 
-    _hash.at(0) = ((uint32)B << 16) | A;
+    _hash.at(0) = ((uint32_t)B << 16) | A;
 
     return asString();
 }
@@ -186,7 +186,7 @@ string Adler32::calculateHash (ifstream &file)
     unsigned short A = 0x0001,
                    B = 0x0000;
 
-    byte value;
+    byte_t value;
 
     while (file.peek() != -1)
     {
@@ -199,7 +199,7 @@ string Adler32::calculateHash (ifstream &file)
         B %= 65521;
     }
 
-    _hash.at(0) = ((uint32)B << 16) | A;
+    _hash.at(0) = ((uint32_t)B << 16) | A;
 
     // Reset the file flags and return to the file head.
     file.clear();

@@ -4,7 +4,7 @@
 ||                                                                           ||
 ||    Author: Gary Hammock, PE                                               ||
 ||    Creation Date: 2014-02-27                                              ||
-||    Last Edit Date: 2014-02-27                                             ||
+||    Last Edit Date: 2014-03-13                                             ||
 ||                                                                           ||
 ||===========================================================================||
 ||  DESCRIPTION                                                              ||
@@ -43,7 +43,7 @@
 
 /** @file hash_abstract.cpp
  *  @author Gary Hammock, PE
- *  @date 2014-02-27
+ *  @date 2014-03-13
 */
 
 #include "hash_abstract.h"
@@ -53,7 +53,7 @@
 ******************************************************/
 
 /** Default constructor.  */
-MessageHash::MessageHash (uint32 bits)
+MessageHash::MessageHash (uint32_t bits)
 {
     _initialize(bits);
 }
@@ -94,7 +94,7 @@ string MessageHash::asString (void) const
     stringstream ss;
     ss << setfill('0') << hex;
 
-    vector < uint32 >::const_iterator it;
+    vector < uint32_t >::const_iterator it;
     for (it = _hash.begin(); it != _hash.end(); ++it)
         ss << setw(8) << *it;
         
@@ -109,10 +109,10 @@ string MessageHash::asString (void) const
  *         that is to receive the hash.
  *  @return none.
 */
-void MessageHash::asArray (uint32 store[]) const
+void MessageHash::asArray (uint32_t store[]) const
 {
-    vector < uint32 >::const_iterator it;
-    uint32 i = 0;
+    vector < uint32_t >::const_iterator it;
+    uint32_t i = 0;
 
     for (it = _hash.begin(); it != _hash.end(); ++it)
         store[i++] = *it;
@@ -158,8 +158,8 @@ bool MessageHash::operator == (const MessageHash &rhs) const
 
     bool match = true;
 
-    vector < uint32 >::const_iterator lhs_it;
-    vector < uint32 >::const_iterator rhs_it;
+    vector < uint32_t >::const_iterator lhs_it;
+    vector < uint32_t >::const_iterator rhs_it;
 
     for (  lhs_it = _hash.begin(), rhs_it = rhs._hash.begin();
            match && (lhs_it != _hash.end()) && (rhs_it != rhs._hash.end());
@@ -211,9 +211,9 @@ ostream & operator << (ostream &os, const MessageHash &hash)
  *  @param hashSizeBits The number of bits in the message hash.
  *  @return none.
 */
-void MessageHash::_initialize (uint32 hashSizeBits)
+void MessageHash::_initialize (uint32_t hashSizeBits)
 {
-    uint32 words = hashSizeBits / 32;
+    uint32_t words = hashSizeBits / 32;
 
     _hash.assign(words, 0x00000000);
 
@@ -232,8 +232,8 @@ void MessageHash::_initialize (uint32 hashSizeBits)
 */
 bool MessageHash::_isLittleEndian (void) const
 {
-    uint32 i = 0x89badcfe;
-    byte *p = (byte *)&i;
+    uint32_t i = 0x89badcfe;
+    byte_t *p = (byte_t *)&i;
 
     // Big endian systems.
     if (p[0] == 0x89)
@@ -250,7 +250,7 @@ bool MessageHash::_isLittleEndian (void) const
 *  @param y The number of bits to shift.
 *  @return The shifted value.
 */
-uint32 MessageHash::_lcshift (uint32 value, uint32 shift) const
+uint32_t MessageHash::_lcshift (uint32_t value, uint32_t shift) const
 {  return ((value << shift) | (value >> (32 - shift)));  }
 
 /** Perform a bitwise right circular-shift.
@@ -259,5 +259,5 @@ uint32 MessageHash::_lcshift (uint32 value, uint32 shift) const
  *  @param y The number of bits to shift.
  *  @return The shifted value.
 */
-uint32 MessageHash::_rcshift (uint32 value, uint32 shift) const
+uint32_t MessageHash::_rcshift (uint32_t value, uint32_t shift) const
 {  return ((value >> shift) | (value << (32 - shift)));  }

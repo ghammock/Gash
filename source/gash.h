@@ -4,7 +4,7 @@
 ||                                                                           ||
 ||    Author: Gary Hammock, PE                                               ||
 ||    Creation Date: 2008-09-17                                              ||
-||    Last Edit Date: 2014-03-03                                             ||
+||    Last Edit Date: 2014-03-13                                             ||
 ||                                                                           ||
 ||===========================================================================||
 ||  DESCRIPTION                                                              ||
@@ -40,7 +40,7 @@
 
 /** @file gash.h
  *  @author Gary Hammock, PE
- *  @date 2014-03-03
+ *  @date 2014-03-13
 */
 
 #ifndef _GASH_DEF_H
@@ -65,7 +65,7 @@ using std::cerr;
 using std::endl;
 using std::ios;
 
-#define _VERSION_ "0.0.3"
+#define _VERSION_ "1.0.0"
 
 ///////////////////////////////////////
 //    Function Declarations

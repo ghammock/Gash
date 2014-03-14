@@ -4,7 +4,7 @@
 ||                                                                           ||
 ||    Author: Gary Hammock, PE                                               ||
 ||    Creation Date: 2009-12-17                                              ||
-||    Last Edit Date: 2014-02-28                                             ||
+||    Last Edit Date: 2014-03-13                                             ||
 ||                                                                           ||
 ||===========================================================================||
 ||  DESCRIPTION                                                              ||
@@ -53,7 +53,7 @@
 
 /** @file crc32.cpp
  *  @author Gary Hammock, PE
- *  @date 2014-02-28
+ *  @date 2014-03-13
 */
 
 #include "crc32.h"
@@ -65,7 +65,7 @@
 // Using little-endian mode (least-significant bit first),
 // this corresponds to a bit-wise polynomial of the
 // form: 1110 1101 1011 1000 1000 0011 0010 0000 (1)
-const uint32 CRC32::_polynomial = 0xedb88320;
+const uint32_t CRC32::_polynomial = 0xedb88320;
 
 /******************************************************
 **            Constructors / Destructors             **
@@ -111,7 +111,7 @@ CRC32::CRC32 (const string &str)
  *        hashed value of the input data.
  *  @param data The data that is to be hashed.
 */
-CRC32::CRC32 (const vector < byte > &data)
+CRC32::CRC32 (const vector < byte_t > &data)
     : MessageHash(32)
 {
     _makeTable();
@@ -152,7 +152,7 @@ CRC32::~CRC32 ()  { }
 */
 string CRC32::calculateHash (const string &str)
 {
-    return calculateHash(vector < byte >(str.begin(), str.end()));
+    return calculateHash(vector < byte_t >(str.begin(), str.end()));
 }
 
 /** Calculate the CRC32 value from an input data stream.
@@ -162,14 +162,14 @@ string CRC32::calculateHash (const string &str)
  *  @param data The data that is to be hashed.
  *  @return The CRC32 value as a std::string.
 */
-string CRC32::calculateHash (const vector < byte > &data)
+string CRC32::calculateHash (const vector < byte_t > &data)
 {
     _initialize(32);
 
     // Compute the Cyclic Redundancy Check of the message
     // using the precomputed table.
     _hash.at(0) = 0xFFFFFFFF;
-    for (uint32 i = 0; i < data.size(); ++i)
+    for (uint32_t i = 0; i < data.size(); ++i)
     {
         _hash.at(0) =  (_hash.at(0) >> 8)
                       ^ _table[(_hash.at(0) & 0xFF) ^ data.at(i)];
@@ -196,7 +196,7 @@ string CRC32::calculateHash (ifstream &file)
     if (file.fail() || !file.good())
         return asString();
 
-    byte value;  // A byte read from the file.
+    byte_t value;  // A byte read from the file.
 
     // Compute the Cyclic Redundancy Check of the message
     // using the precomputed table.
@@ -230,15 +230,15 @@ string CRC32::calculateHash (ifstream &file)
 */
 void CRC32::_makeTable (void)
 {
-    uint32 value;
+    uint32_t value;
 
     // Prepare the CRC table so that we can operate
     // on byte values as opposed to individual bits
-    for (uint32 i = 0; i < 256; ++i)
+    for (uint32_t i = 0; i < 256; ++i)
     {
         value = i;
 
-        for (uint32 j = 0; j < 8; ++j)
+        for (uint32_t j = 0; j < 8; ++j)
         {
             if ((value & 0x00000001) == 1)
                 value = (value >> 1) ^ _polynomial;
